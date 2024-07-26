@@ -17,6 +17,7 @@ builder.Services.AddScoped<ILibroRepositorio, LibroRepositorio>();
 builder.Services.AddScoped<IPrestamoRepositorio, PrestamoRepositorio>();
 builder.Services.AddScoped<IReservaRepositorio, ReservaRepositorio>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
 builder.Services.AddAuthentication(options =>
