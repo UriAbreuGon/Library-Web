@@ -32,6 +32,7 @@ namespace Library.Infrastructure.Repositorios
         public async Task<Prestamo> Crear(Prestamo prestamo)
         {
             _contexto.Prestamos.Add(prestamo);
+            prestamo.Libro.EstaDisponible = false; // Marcar el libro como no disponible
             await _contexto.SaveChangesAsync();
             return prestamo;
         }
@@ -47,9 +48,19 @@ namespace Library.Infrastructure.Repositorios
             var prestamo = await _contexto.Prestamos.FindAsync(id);
             if (prestamo != null)
             {
+                prestamo.Libro.EstaDisponible = true; // Marcar el libro como disponible
                 _contexto.Prestamos.Remove(prestamo);
                 await _contexto.SaveChangesAsync();
             }
+        }
+
+        public async Task<IEnumerable<Prestamo>> ObtenerHistorialPorUsuario(int usuarioId)
+        {
+            return await _contexto.Prestamos
+                .Include(p => p.Libro)
+                .Include(p => p.Usuario)
+                .Where(p => p.UsuarioId == usuarioId)
+                .ToListAsync();
         }
     }
 }

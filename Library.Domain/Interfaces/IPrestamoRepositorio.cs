@@ -14,5 +14,6 @@ namespace Library.Domain.Interfaces
         Task<Prestamo> Crear(Prestamo prestamo);
         Task Actualizar(Prestamo prestamo);
         Task Eliminar(int id);
+        Task<IEnumerable<Prestamo>> ObtenerHistorialPorUsuario(int usuarioId);
     }
 }
