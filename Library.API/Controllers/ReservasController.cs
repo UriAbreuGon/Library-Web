@@ -1,5 +1,6 @@
 ﻿using Library.Domain.Entities;
 using Library.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,13 +8,16 @@ namespace Library.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ReservasController : ControllerBase
     {
         private readonly IReservaRepositorio _reservaRepositorio;
+        private readonly IEmailService _emailService;
 
-        public ReservasController(IReservaRepositorio reservaRepositorio)
+        public ReservasController(IReservaRepositorio reservaRepositorio, IEmailService emailService)
         {
             _reservaRepositorio = reservaRepositorio;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -40,6 +44,13 @@ namespace Library.API.Controllers
         public async Task<ActionResult<Reserva>> CrearReserva(Reserva reserva)
         {
             var nuevaReserva = await _reservaRepositorio.Crear(reserva);
+
+            // Enviar notificación por correo electrónico
+            var usuario = nuevaReserva.Usuario;
+            var libro = nuevaReserva.Libro;
+            var mensaje = $"Hola {usuario.NombreUsuario},\n\nTu reserva para el libro \"{libro.Titulo}\" ha sido confirmada.\n\nGracias.";
+            await _emailService.EnviarCorreoAsync(usuario.Correo, "Confirmación de Reserva", mensaje);
+
             return CreatedAtAction("ObtenerReserva", new { id = nuevaReserva.Id }, nuevaReserva);
         }
 
