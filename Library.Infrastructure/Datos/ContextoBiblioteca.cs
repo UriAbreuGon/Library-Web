@@ -10,8 +10,16 @@ namespace Library.Infrastructure.Datos
 {
     public class ContextoBiblioteca : DbContext
     {
-        public ContextoBiblioteca(DbContextOptions<ContextoBiblioteca> opciones) : base(opciones)
+        public ContextoBiblioteca(DbContextOptions<ContextoBiblioteca> opciones) : base(opciones) { }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(
+                    "Server=MSI\\SQLEXPRESS;Database=BibliotecaDb;Trusted_Connection=True;MultipleActiveResultSets=true",
+                    b => b.MigrationsAssembly("Library.Infrastructure"));
+            }
         }
 
         public DbSet<Libro> Libros { get; set; }
@@ -22,8 +30,8 @@ namespace Library.Infrastructure.Datos
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             // Configuraciones adicionales de las entidades
         }
     }
+
 }

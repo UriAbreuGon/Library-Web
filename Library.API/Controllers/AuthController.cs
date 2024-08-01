@@ -38,10 +38,10 @@ namespace Library.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] Usuario usuario)
+        public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
-            var usuarioExistente = await _usuarioRepositorio.ObtenerPorCorreo(usuario.Correo);
-            if (usuarioExistente == null || !BCrypt.Net.BCrypt.Verify(usuario.Contraseña, usuarioExistente.Contraseña))
+            var usuarioExistente = await _usuarioRepositorio.ObtenerPorCorreo(loginModel.Correo);
+            if (usuarioExistente == null || !BCrypt.Net.BCrypt.Verify(loginModel.Contraseña, usuarioExistente.Contraseña))
                 return Unauthorized("Correo o contraseña incorrectos.");
 
             var token = GenerarToken(usuarioExistente);
@@ -105,5 +105,11 @@ namespace Library.API.Controllers
             await _usuarioRepositorio.Eliminar(id);
             return NoContent();
         }
+    }
+
+    public class LoginModel
+    {
+        public string Correo { get; set; }
+        public string Contraseña { get; set; }
     }
 }
