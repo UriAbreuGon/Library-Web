@@ -26,7 +26,7 @@ namespace Library.Infrastructure.Repositorios
 
         public async Task<Usuario> ObtenerPorId(int id)
         {
-            return await _contexto.Usuarios.FindAsync(id);
+            return await _contexto.Usuarios.FindAsync(id);  
         }
 
         public async Task<Usuario> Crear(Usuario usuario)

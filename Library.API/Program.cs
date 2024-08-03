@@ -52,6 +52,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddLogging();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -106,3 +108,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
